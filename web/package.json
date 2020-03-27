@@ -1,0 +1,46 @@
+{
+  "name": "avatarz-web",
+  "private": true,
+  "dependencies": {
+    "3dio": "^2.1.0",
+    "@testing-library/jest-dom": "^5.3.0",
+    "@testing-library/react": "^10.0.1",
+    "@testing-library/user-event": "^10.0.1",
+    "aframe": "^1.0.4",
+    "aframe-extras": "^6.1.0",
+    "aframe-react": "^4.4.0",
+    "antd": "^4.0.4",
+    "babel-plugin-import": "^1.13.0",
+    "customize-cra": "^0.9.1",
+    "less": "^3.11.1",
+    "less-loader": "^5.0.0",
+    "query-string": "^6.11.1",
+    "react": "^16.13.1",
+    "react-app-rewired": "^2.1.5",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.1",
+    "webrtc-adapter": "^7.5.1"
+  },
+  "scripts": {
+    "start": "REACT_APP_SIGNALING_URL=\"wss://hs2qqatol1.execute-api.eu-west-1.amazonaws.com/staging\" react-app-rewired --max_old_space_size=4096 start",
+    "build": "REACT_APP_SIGNALING_URL=$SIGNALING_URL react-app-rewired --max_old_space_size=4096 build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

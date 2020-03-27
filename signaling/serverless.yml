@@ -1,0 +1,62 @@
+service: avatarz-signaling
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ${opt:region, 'eu-west-1'}
+  stage: ${opt:stage, 'staging'}
+  websocketsApiName: ${self:service}-${self:provider.stage}
+  environment:
+    ROOMS_TABLE:
+      Ref: RoomsTable
+  iamRoleStatements:
+    - Effect: Allow
+      Action: execute-api:ManageConnections
+      Resource: arn:aws:execute-api:*:*:**/@connections/*
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:Scan
+      Resource:
+        - Fn::GetAtt: [RoomsTable, Arn]
+        - Fn::Join:
+            - '/'
+            - - Fn::GetAtt: [RoomsTable, Arn]
+              - '*'
+
+functions:
+  onConnect:
+    handler: src/index.onConnect
+    events:
+      - websocket:
+          route: $connect
+  onDisconnect:
+    handler: src/index.onDisconnect
+    events:
+      - websocket:
+          route: $disconnect
+  onMessage:
+    handler: src/index.onMessage
+    events:
+      - websocket:
+          route: $default
+
+resources:
+  Resources:
+    RoomsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-rooms
+        SSESpecification:
+          SSEEnabled: true
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
